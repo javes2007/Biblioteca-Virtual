@@ -1,5 +1,6 @@
-:root{--primario:#1f5f46;--acento:#c8963e;--fondo:#f6f1e6;--fondo-osc:#101a16;--papel:#fffdf8;--texto:#1c2a24;--suave:#6a736e;--borde:#e3dac8;--primario-osc:#133d2d;--primario-cl:#e6f1ea;--acento-osc:#a47521;--rojo:#b3362b;--rojo-cl:#fbe6e3;--azul:#245a8d;--azul-cl:#e3eef8;--amarillo-cl:#fff3d6;--sombra:0 10px 30px -14px rgba(19,61,45,.35);--fs:1rem;--radio:0}
+:root{--primario:#1f5f46;--acento:#c8963e;--fondo-personalizado:#f6f1e6;--fondo-osc-personalizado:#101a16;--fondo:var(--fondo-personalizado);--fondo-osc:var(--fondo-osc-personalizado);--papel:#fffdf8;--texto:#1c2a24;--suave:#6a736e;--borde:#e3dac8;--primario-osc:#133d2d;--primario-cl:#e6f1ea;--acento-osc:#a47521;--rojo:#b3362b;--rojo-cl:#fbe6e3;--azul:#245a8d;--azul-cl:#e3eef8;--amarillo-cl:#fff3d6;--sombra:0 10px 30px -14px rgba(19,61,45,.35);--fs:1rem;--radio:0}
 @supports (color:color-mix(in srgb,red,blue)){:root{--primario-osc:color-mix(in srgb,var(--primario) 62%,#000);--primario-cl:color-mix(in srgb,var(--primario) 13%,var(--papel));--acento-osc:color-mix(in srgb,var(--acento) 75%,#000)}}
+:root[data-tema="claro"]{color-scheme:light}
 :root[data-tema="oscuro"]{color-scheme:dark;--fondo:var(--fondo-osc);--papel:#18251f;--texto:#e9efe9;--suave:#9fb2a7;--borde:#2c3e36;--primario-cl:#1d3329;--rojo-cl:#3a1d1a;--azul-cl:#1b2c3d;--amarillo-cl:#3a3015;--sombra:0 10px 30px -14px rgba(0,0,0,.7)}
 @media (prefers-color-scheme:dark){:root[data-tema="auto"]{color-scheme:dark;--fondo:var(--fondo-osc);--papel:#18251f;--texto:#e9efe9;--suave:#9fb2a7;--borde:#2c3e36;--primario-cl:#1d3329;--rojo-cl:#3a1d1a;--azul-cl:#1b2c3d;--amarillo-cl:#3a3015;--sombra:0 10px 30px -14px rgba(0,0,0,.7)}}
 @supports (color:color-mix(in srgb,red,blue)){:root[data-tema="oscuro"]{--primario-cl:color-mix(in srgb,var(--primario) 24%,var(--papel))}@media (prefers-color-scheme:dark){:root[data-tema="auto"]{--primario-cl:color-mix(in srgb,var(--primario) 24%,var(--papel))}}}
@@ -287,3 +288,60 @@ mark.res-azul{background:rgba(130,190,255,.6)}
 @media (max-width:640px){.portada-inicio{grid-template-columns:1fr;min-height:0;padding:28px 20px}.portada-arte{min-height:230px;max-width:390px;width:100%;margin:0 auto}.libro-grande{width:155px;height:215px;left:17%;top:7%}.libro-pequeno{width:125px;height:180px;right:9%;bottom:0}.sello-lectura{width:72px;height:72px;right:1%;top:0;font-size:.54rem}.busqueda-editorial{grid-template-columns:1fr;gap:4px;padding:6px}.busqueda-editorial select{border-left:0!important;border-top:1px solid #e6e0d5!important}.busqueda-editorial button{width:100%}.franja-datos{grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:36px}.franja-datos>div{justify-content:flex-start;border-bottom:1px solid var(--borde)}.franja-datos>div:nth-child(2){border-right:0}.franja-datos>div:nth-child(3),.franja-datos>div:nth-child(4){border-bottom:0}.destacado-editorial{grid-template-columns:1fr;gap:22px;padding:18px;margin-bottom:38px}.destacado-visual{min-height:245px}.portada-destacada{min-height:220px}.cabecera-bloque{align-items:flex-start;flex-direction:column;gap:10px}.colecciones-editoriales{grid-template-columns:1fr 1fr;gap:10px}.coleccion-editorial{min-height:150px;padding:16px}.coleccion-editorial .numero-coleccion{left:16px;top:13px}.nombre-coleccion{font-size:1.12rem}.bloque-editorial{margin-bottom:38px}.invitacion-lector{align-items:flex-start;flex-direction:column}.rejilla-editorial .portada{min-height:145px;padding:12px}.rejilla-editorial .tarjeta-libro .datos{padding:10px}.rejilla-editorial .portada span{font-size:.94rem}}
 @media (max-width:380px){.franja-datos>div{gap:7px;padding:12px 8px}.franja-datos strong{font-size:1.25rem}.franja-datos span{font-size:.72rem}.colecciones-editoriales{grid-template-columns:1fr}.coleccion-editorial{min-height:125px}.rejilla-editorial{grid-template-columns:1fr}.rejilla-editorial .portada{min-height:180px}}
 @media (prefers-reduced-motion:reduce){.coleccion-editorial:hover{transform:none}}
+
+
+/* Sistema visual refinado: jerarquía tipográfica, filigranas y formularios */
+:root{
+  --fuente-cuerpo:"Inter","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --fuente-titulos:"Georgia","Times New Roman",serif;
+  --texto-xs:clamp(.74rem,.7rem + .12vw,.82rem);
+  --texto-sm:clamp(.86rem,.82rem + .16vw,.94rem);
+  --texto-base:clamp(.96rem,.92rem + .18vw,1.06rem);
+  --texto-lg:clamp(1.12rem,1.02rem + .42vw,1.32rem);
+  --texto-xl:clamp(1.38rem,1.18rem + .8vw,1.85rem);
+  --texto-2xl:clamp(1.8rem,1.35rem + 1.6vw,2.65rem);
+  --texto-3xl:clamp(2.25rem,1.55rem + 2.8vw,3.65rem);
+}
+body{font-family:var(--fuente-cuerpo);font-size:var(--texto-base);line-height:1.65}
+h1{font-size:var(--texto-2xl);line-height:1.12;letter-spacing:-.025em}
+h2{font-size:var(--texto-xl);line-height:1.2;letter-spacing:-.015em}
+h3{font-size:var(--texto-lg);line-height:1.3}
+p{max-width:75ch}
+label{font-size:var(--texto-sm);font-weight:700;letter-spacing:.005em}
+.ayuda,.cat,.sobrelinea{font-size:var(--texto-xs)}
+.portada-inicio:after{content:"";position:absolute;z-index:0;inset:0 auto 0 58%;width:42%;pointer-events:none;opacity:.14;background-image:radial-gradient(circle at 1px 1px,#174d3a 1px,transparent 1.5px);background-size:18px 18px;mask-image:linear-gradient(90deg,transparent,#000)}
+.portada-copia,.portada-arte{z-index:1}
+.inicio-bdb .portada-inicio h1{font-size:var(--texto-3xl);line-height:1.04}
+.bloque-editorial .cabecera-bloque h2{font-size:var(--texto-2xl)}
+.tarjeta-form{width:min(100%,560px);border-radius:16px;padding:clamp(22px,4vw,38px);box-shadow:0 18px 48px -26px rgba(19,61,45,.38)}
+.tarjeta-form h1{margin-bottom:8px}
+.tarjeta-form>p{color:var(--suave);margin-top:0}
+.formulario{gap:18px}
+.formulario>div,.formulario .doble>div{min-width:0}
+input[type=text],input[type=email],input[type=password],input[type=number],input[type=date],input[type=search],input[type=file],select,textarea{border-radius:8px;min-height:48px;padding:12px 14px;line-height:1.35}
+textarea{min-height:120px}
+.btn{border-radius:8px;min-height:46px}
+.btn-sm{min-height:40px}
+.campo-password{display:flex;align-items:stretch;position:relative;width:100%}
+.campo-password input{flex:1;min-width:0;padding-right:54px}
+.campo-password .ojo-password{position:absolute;right:5px;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border:0;border-radius:7px;background:transparent;color:var(--suave);cursor:pointer}
+.campo-password .ojo-password:hover{background:var(--primario-cl);color:var(--primario)}
+.ojo-password svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.opciones-tema label{border-radius:8px}
+.panel,.tarjeta-libro,.dato,.franja-datos,.destacado-editorial{border-radius:12px}
+.portada-inicio,.invitacion-lector{border-radius:16px}
+.coleccion-editorial{border-radius:12px}
+@media(max-width:640px){
+  .contenedor{padding-left:14px;padding-right:14px}
+  .tarjeta-form{margin:12px auto 24px;padding:22px 18px}
+  .tarjeta-form .doble{grid-template-columns:1fr}
+  .tarjeta-form .btn{width:100%}
+  .portada-inicio{border-radius:12px}
+  .franja-datos{border-radius:10px;overflow:hidden}
+  .acciones,.acciones-destacado,.invitacion-acciones{width:100%}
+  .acciones>.btn,.invitacion-acciones>.btn{flex:1}
+}
+@media(max-width:360px){
+  .campo-password input{font-size:16px}
+  .tarjeta-form{padding:18px 14px}
+}
