@@ -43,7 +43,7 @@ $titulo = 'Apariencia del sitio';
 require 'cabecera.php';
 ?>
 <h1>Apariencia del sitio</h1>
-<p>Cambia los colores y el nombre de la biblioteca. Los cambios se aplican a todas las páginas y a todos los lectores. Mueve los colores para ver una vista previa antes de guardar.</p>
+<p>Cambia los colores y el nombre de la biblioteca. Los colores de marca se aplican en todo el sitio. Los fondos se adaptan al tema claro u oscuro de cada lector. Mueve los controles para previsualizar los cambios.</p>
 <?php if ($error !== ''): ?><div class="mensaje mensaje-error"><?php echo e($error); ?></div><?php endif; ?>
 <form class="panel formulario" method="post" style="max-width:860px">
   <?php echo campo_csrf(); ?>
@@ -51,8 +51,8 @@ require 'cabecera.php';
   <div class="muestra-color">
     <div><label for="color_primario">Color principal</label><input id="color_primario" type="color" name="color_primario" value="<?php echo e($c['color_primario']); ?>" data-var="--primario"></div>
     <div><label for="color_acento">Color de acento</label><input id="color_acento" type="color" name="color_acento" value="<?php echo e($c['color_acento']); ?>" data-var="--acento"></div>
-    <div><label for="color_fondo">Fondo (modo claro)</label><input id="color_fondo" type="color" name="color_fondo" value="<?php echo e($c['color_fondo']); ?>" data-var="--fondo"></div>
-    <div><label for="color_fondo_oscuro">Fondo (modo oscuro)</label><input id="color_fondo_oscuro" type="color" name="color_fondo_oscuro" value="<?php echo e($c['color_fondo_oscuro']); ?>" data-var="--fondo-osc"></div>
+    <div><label for="color_fondo">Fondo (modo claro)</label><input id="color_fondo" type="color" name="color_fondo" value="<?php echo e($c['color_fondo']); ?>" data-var="--fondo-personalizado"></div>
+    <div><label for="color_fondo_oscuro">Fondo (modo oscuro)</label><input id="color_fondo_oscuro" type="color" name="color_fondo_oscuro" value="<?php echo e($c['color_fondo_oscuro']); ?>" data-var="--fondo-osc-personalizado"></div>
   </div>
   <div><label for="css_extra">CSS personalizado (avanzado)</label><textarea id="css_extra" name="css_extra" rows="8" maxlength="8000" spellcheck="false" style="font-family:Consolas,monospace" placeholder=".hero { background: #222; }"><?php echo e($c['css_extra']); ?></textarea><div class="ayuda">Escribe reglas CSS para cambiar cualquier parte del diseño. Se aplican a todas las páginas.</div></div>
   <div class="acciones"><button class="btn" type="submit"><?php echo icono('check', 18); ?> Guardar apariencia</button></div>
