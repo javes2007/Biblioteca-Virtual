@@ -79,3 +79,107 @@ function exportar_excel($nombre, $titulos, $filas) {
     echo '</table></body></html>';
     exit;
 }
+
+
+function pdf_texto_seguro($texto) {
+    $texto = (string)$texto;
+    if (function_exists('iconv')) {
+        $convertido = @iconv('UTF-8', 'Windows-1252//TRANSLIT//IGNORE', $texto);
+        if ($convertido !== false) { $texto = $convertido; }
+    } else {
+        $texto = utf8_decode($texto);
+    }
+    $texto = preg_replace('/[^\x20-\xFF]/', ' ', $texto);
+    return str_replace(array("\\", "(", ")"), array("\\\\", "\\(", "\\)"), $texto);
+}
+
+function pdf_agregar_lineas(&$destino, $texto, $ancho = 96) {
+    $texto = trim(preg_replace('/\s+/u', ' ', (string)$texto));
+    if ($texto === '') { $destino[] = ' '; return; }
+    $partes = explode("\n", wordwrap($texto, $ancho, "\n", true));
+    foreach ($partes as $parte) { $destino[] = $parte; }
+}
+
+function exportar_pdf($nombre, $titulos, $filas, $resumen = array(), $extra = array()) {
+    $lineas = array();
+    pdf_agregar_lineas($lineas, $nombre, 80);
+    pdf_agregar_lineas($lineas, 'Generado: ' . date('d/m/Y H:i'), 100);
+    $lineas[] = str_repeat('-', 100);
+    if (count($resumen)) {
+        pdf_agregar_lineas($lineas, 'RESUMEN', 100);
+        foreach ($resumen as $r) { pdf_agregar_lineas($lineas, $r[0] . ': ' . $r[1], 100); }
+        $lineas[] = str_repeat('-', 100);
+    }
+    pdf_agregar_lineas($lineas, 'DETALLE', 100);
+    pdf_agregar_lineas($lineas, implode(' | ', $titulos), 100);
+    $lineas[] = str_repeat('-', 100);
+    if (!count($filas)) {
+        $lineas[] = 'No hay registros para los filtros seleccionados.';
+    } else {
+        foreach ($filas as $i => $fila) {
+            pdf_agregar_lineas($lineas, 'Registro ' . ($i + 1) . ': ' . implode(' | ', array_map('strval', $fila)), 100);
+            $lineas[] = '';
+        }
+    }
+    foreach ($extra as $bloque) {
+        $lineas[] = str_repeat('=', 100);
+        pdf_agregar_lineas($lineas, strtoupper($bloque[0]), 100);
+        pdf_agregar_lineas($lineas, implode(' | ', $bloque[1]), 100);
+        foreach ($bloque[2] as $fila) {
+            pdf_agregar_lineas($lineas, implode(' | ', array_map('strval', $fila)), 100);
+        }
+    }
+
+    $por_pagina = 52;
+    $paginas = array_chunk($lineas, $por_pagina);
+    if (!count($paginas)) { $paginas = array(array('Sin datos')); }
+    $objetos = array();
+    $total = count($paginas);
+    $objetos[1] = '<< /Type /Catalog /Pages 2 0 R >>';
+    $ids_paginas = array();
+    for ($i = 0; $i < $total; $i++) { $ids_paginas[] = (5 + ($i * 2)) . ' 0 R'; }
+    $objetos[2] = '<< /Type /Pages /Kids [' . implode(' ', $ids_paginas) . '] /Count ' . $total . ' >>';
+    $objetos[3] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';
+    $objetos[4] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>';
+
+    foreach ($paginas as $i => $contenido_pagina) {
+        $id_pagina = 5 + ($i * 2);
+        $id_stream = $id_pagina + 1;
+        $comandos = array();
+        $y = 800;
+        foreach ($contenido_pagina as $j => $linea) {
+            $font = ($i === 0 && $j === 0) ? 'F2' : 'F1';
+            $size = ($i === 0 && $j === 0) ? 14 : 8;
+            $comandos[] = 'BT /' . $font . ' ' . $size . ' Tf 42 ' . $y . ' Td (' . pdf_texto_seguro($linea) . ') Tj ET';
+            $y -= ($size === 14 ? 22 : 14);
+            if ($y < 45) { break; }
+        }
+        $comandos[] = 'BT /F1 8 Tf 500 25 Td (' . pdf_texto_seguro('Página ' . ($i + 1) . ' de ' . $total) . ') Tj ET';
+        $stream = implode("\n", $comandos);
+        $objetos[$id_pagina] = '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ' . $id_stream . ' 0 R >>';
+        $objetos[$id_stream] = '<< /Length ' . strlen($stream) . " >>\nstream\n" . $stream . "\nendstream";
+    }
+
+    ksort($objetos);
+    $pdf = "%PDF-1.4\n%\xE2\xE3\xCF\xD3\n";
+    $offsets = array(0);
+    foreach ($objetos as $id => $objeto) {
+        $offsets[$id] = strlen($pdf);
+        $pdf .= $id . " 0 obj\n" . $objeto . "\nendobj\n";
+    }
+    $inicio_xref = strlen($pdf);
+    $max_id = max(array_keys($objetos));
+    $pdf .= "xref\n0 " . ($max_id + 1) . "\n";
+    $pdf .= "0000000000 65535 f \n";
+    for ($i = 1; $i <= $max_id; $i++) {
+        $pdf .= sprintf("%010d 00000 n \n", isset($offsets[$i]) ? $offsets[$i] : 0);
+    }
+    $pdf .= "trailer\n<< /Size " . ($max_id + 1) . " /Root 1 0 R >>\nstartxref\n" . $inicio_xref . "\n%%EOF";
+    $base = preg_replace('/[^A-Za-z0-9_-]/', '_', $nombre) . '_' . date('Ymd') . '.pdf';
+    header('Content-Type: application/pdf');
+    header('Content-Disposition: attachment; filename="' . $base . '"');
+    header('Content-Length: ' . strlen($pdf));
+    header('X-Content-Type-Options: nosniff');
+    echo $pdf;
+    exit;
+}
