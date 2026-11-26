@@ -2,7 +2,7 @@
 date_default_timezone_set('America/Bogota');
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-$MOSTRAR_ERRORES_BD = true;
+$MOSTRAR_ERRORES_BD = false;
 
 $servidor = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost';
 if ($servidor === 'localhost' || $servidor === '127.0.0.1') {
