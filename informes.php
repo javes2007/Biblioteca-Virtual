@@ -109,6 +109,9 @@ if ($tipo === 'prestamos') {
     $resumen = array(array('Sugerencias', count($filas)), array('Pendientes', $conteo['Pendiente']), array('Aprobadas', $conteo['Aprobada']), array('Adquiridas', $conteo['Adquirida']), array('Rechazadas', $conteo['Rechazada']));
 }
 
+if (isset($_GET['pdf'])) {
+    exportar_pdf($nombre_informe, $encabezados, $filas, $resumen, $extra);
+}
 if (isset($_GET['excel'])) {
     exportar_excel('informe_' . $tipo, $encabezados, $filas);
 }
@@ -121,7 +124,7 @@ $titulo = 'Informes';
 require 'cabecera.php';
 ?>
 <div class="seccion-titulo no-imprimir" style="margin-top:0"><h1>Informes</h1>
-  <div class="acciones"><button class="btn btn-claro" type="button" onclick="window.print()"><?php echo icono('imprimir', 16); ?> Imprimir / Guardar PDF</button><a class="btn" href="informes.php?<?php echo e(http_build_query(array_merge($parametros, array('excel' => 1)))); ?>"><?php echo icono('descargar', 16); ?> Descargar Excel</a></div></div>
+  <div class="acciones"><a class="btn btn-oro" href="informes.php?<?php echo e(http_build_query(array_merge($parametros, array('pdf' => 1)))); ?>"><?php echo icono('descargar', 16); ?> Descargar PDF</a><button class="btn btn-claro" type="button" onclick="window.print()"><?php echo icono('imprimir', 16); ?> Imprimir</button><a class="btn" href="informes.php?<?php echo e(http_build_query(array_merge($parametros, array('excel' => 1)))); ?>"><?php echo icono('descargar', 16); ?> Descargar Excel</a></div></div>
 <div class="pestanas no-imprimir">
   <?php foreach ($tipos_validos as $k => $nombre): ?><a class="<?php echo $k === $tipo ? 'activo' : ''; ?>" href="informes.php?tipo=<?php echo e($k); ?>"><?php echo e($nombre); ?></a><?php endforeach; ?>
 </div>

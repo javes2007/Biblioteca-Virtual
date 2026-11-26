@@ -152,7 +152,7 @@ require 'cabecera.php';
   <div class="acciones"><button class="btn" type="submit"><?php echo icono('check', 18); ?> Guardar datos</button></div>
 </form>
 
-<form class="panel formulario" method="post">
+<form class="panel formulario" method="post" id="apariencia">
   <?php echo campo_csrf(); ?><input type="hidden" name="accion" value="tema">
   <h2><?php echo icono('luna', 20); ?> Apariencia</h2>
   <div class="opciones-tema">
@@ -187,4 +187,14 @@ require 'cabecera.php';
 </div>
 <?php endif; ?>
 <?php endif; ?>
+<script>
+(function () {
+  var opciones = document.querySelectorAll('#apariencia input[name="tema"]');
+  for (var i = 0; i < opciones.length; i++) {
+    opciones[i].addEventListener('change', function () {
+      document.documentElement.setAttribute('data-tema', this.value);
+    });
+  }
+})();
+</script>
 <?php require 'pie.php'; ?>

@@ -67,7 +67,6 @@ $cab_estilo .= '}' . limpiar_css($cab_cfg['css_extra']);
       <?php foreach ($cab_menu as $cab_item): ?>
         <a class="<?php echo in_array($cab_pagina, $cab_item[3], true) ? 'activo' : ''; ?>" href="<?php echo e($cab_item[0]); ?>"><?php echo icono($cab_item[2], 16); ?> <?php echo e($cab_item[1]); ?><?php if ($cab_item[4] > 0): ?> <span class="globo"><?php echo (int)$cab_item[4]; ?></span><?php endif; ?></a>
       <?php endforeach; ?>
-      <button class="enlace-menu" type="button" id="boton-tema" title="Cambiar entre modo automático, claro y oscuro" aria-label="Cambiar tema"><?php echo icono('luna', 16); ?> <span id="texto-tema">Tema</span></button>
       <?php if (logueado()): ?>
         <a class="<?php echo $cab_pagina === 'perfil.php' ? 'activo' : ''; ?>" href="perfil.php"><?php echo $cab_usuario ? avatar_html($cab_usuario, 26) : icono('usuario', 16); ?> <?php echo e($_SESSION['nombre']); ?></a>
         <a href="logout.php"><?php echo icono('salir', 16); ?> Salir</a>

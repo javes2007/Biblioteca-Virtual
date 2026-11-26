@@ -1,1 +1,6 @@
-Require all denied
+Options -Indexes
+
+# Evita exponer archivos de configuración, código interno y respaldos.
+<FilesMatch "^(\.htaccess|\.htpasswd|conectar\.php|seguridad\.php|biblioteca_virtual\.sql|.*\.(bak|sql|ini|log|env))$">
+    Require all denied
+</FilesMatch>
