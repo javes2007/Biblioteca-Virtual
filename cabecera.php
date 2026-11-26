@@ -43,8 +43,8 @@ if (es_admin()) {
 $cab_estilo = ':root{';
 if (color_valido($cab_cfg['color_primario'])) { $cab_estilo .= '--primario:' . $cab_cfg['color_primario'] . ';'; }
 if (color_valido($cab_cfg['color_acento'])) { $cab_estilo .= '--acento:' . $cab_cfg['color_acento'] . ';'; }
-if (color_valido($cab_cfg['color_fondo'])) { $cab_estilo .= '--fondo:' . $cab_cfg['color_fondo'] . ';'; }
-if (color_valido($cab_cfg['color_fondo_oscuro'])) { $cab_estilo .= '--fondo-osc:' . $cab_cfg['color_fondo_oscuro'] . ';'; }
+if (color_valido($cab_cfg['color_fondo'])) { $cab_estilo .= '--fondo-personalizado:' . $cab_cfg['color_fondo'] . ';'; }
+if (color_valido($cab_cfg['color_fondo_oscuro'])) { $cab_estilo .= '--fondo-osc-personalizado:' . $cab_cfg['color_fondo_oscuro'] . ';'; }
 $cab_estilo .= '}' . limpiar_css($cab_cfg['css_extra']);
 ?>
 <!DOCTYPE html>
@@ -55,7 +55,7 @@ $cab_estilo .= '}' . limpiar_css($cab_cfg['css_extra']);
 <meta name="color-scheme" content="light dark">
 <title><?php echo e($titulo); ?> · <?php echo e($cab_cfg['nombre_sitio']); ?></title>
 <script>(function(){var t=<?php echo logueado() ? json_encode($cab_tema) : 'null'; ?>;if(!t){try{t=localStorage.getItem('bv_tema')||'auto';}catch(e){t='auto';}}document.documentElement.setAttribute('data-tema',t);})();</script>
-<link rel="stylesheet" href="estilos.css">
+<link rel="stylesheet" href="estilos.css?v=20261126-2">
 <style id="estilo-sitio"><?php echo $cab_estilo; ?></style>
 </head>
 <body data-csrf="<?php echo e(csrf_token()); ?>" data-logueado="<?php echo logueado() ? '1' : '0'; ?>">
