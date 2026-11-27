@@ -2,6 +2,7 @@
 require_once 'seguridad.php';
 if (logueado()) { exigir_login(); }
 if (es_admin()) { redirigir('panel.php'); }
+if (es_bibliotecario()) { redirigir('panel_bibliotecario.php'); }
 $cn = db();
 $tot_libros = (int)valor($cn, 'SELECT COUNT(*) FROM libros');
 $tot_ejemplares = (int)valor($cn, 'SELECT COALESCE(SUM(ejemplares),0) FROM libros');
