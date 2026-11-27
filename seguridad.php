@@ -35,6 +35,14 @@ function es_lector() {
     return logueado() && isset($_SESSION['rol']) && $_SESSION['rol'] === 'lector';
 }
 
+function es_bibliotecario() {
+    return logueado() && isset($_SESSION['rol']) && $_SESSION['rol'] === 'bibliotecario';
+}
+
+function es_gestor_prestamos() {
+    return es_admin() || es_bibliotecario();
+}
+
 function csrf_token() {
     if (empty($_SESSION['csrf'])) { $_SESSION['csrf'] = bin2hex(random_bytes(32)); }
     return $_SESSION['csrf'];
@@ -148,6 +156,14 @@ function exigir_lector() {
     exigir_login();
     if (!es_lector()) {
         flash('error', 'Esa sección es solo para lectores.');
+        redirigir('index.php');
+    }
+}
+
+function exigir_gestor_prestamos() {
+    exigir_login();
+    if (!es_gestor_prestamos()) {
+        flash('error', 'No tienes permiso para gestionar préstamos.');
         redirigir('index.php');
     }
 }
