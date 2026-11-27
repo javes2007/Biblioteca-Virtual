@@ -40,7 +40,7 @@ CREATE TABLE usuarios (
   telefono VARCHAR(20) NOT NULL,
   fecha_nacimiento DATE NOT NULL,
   clave VARCHAR(255) NOT NULL,
-  rol ENUM('admin','lector') NOT NULL DEFAULT 'lector',
+  rol ENUM('admin','bibliotecario','lector') NOT NULL DEFAULT 'lector',
   activo TINYINT(1) NOT NULL DEFAULT 1,
   foto VARCHAR(80) DEFAULT NULL,
   tema ENUM('auto','claro','oscuro') NOT NULL DEFAULT 'auto',
