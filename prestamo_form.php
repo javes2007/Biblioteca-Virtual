@@ -1,6 +1,6 @@
 <?php
 require_once 'seguridad.php';
-exigir_admin();
+exigir_gestor_prestamos();
 $cn = db();
 $yo = (int)$_SESSION['usuario_id'];
 $id = (int)(isset($_REQUEST['id']) ? $_REQUEST['id'] : 0);
