@@ -1,6 +1,6 @@
 <?php
 require_once 'seguridad.php';
-if (logueado()) { redirigir(es_admin() ? 'panel.php' : 'index.php'); }
+if (logueado()) { redirigir(es_admin() ? 'panel.php' : (es_bibliotecario() ? 'panel_bibliotecario.php' : 'index.php')); }
 $cn = db();
 $error = '';
 $correo = '';
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['nombre'] = $u['nombre'];
                 $_SESSION['rol'] = $u['rol'];
                 flash('ok', 'Bienvenido, ' . $u['nombre'] . '.');
-                redirigir($u['rol'] === 'admin' ? 'panel.php' : 'catalogo.php');
+                redirigir($u['rol'] === 'admin' ? 'panel.php' : ($u['rol'] === 'bibliotecario' ? 'panel_bibliotecario.php' : 'catalogo.php'));
             }
         } else {
             $_SESSION['intentos'] = (isset($_SESSION['intentos']) ? (int)$_SESSION['intentos'] : 0) + 1;

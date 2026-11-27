@@ -1,6 +1,6 @@
 <?php
 require_once 'seguridad.php';
-if (logueado()) { redirigir(es_admin() ? 'panel.php' : 'index.php'); }
+if (logueado()) { redirigir(es_admin() ? 'panel.php' : (es_bibliotecario() ? 'panel_bibliotecario.php' : 'index.php')); }
 $cn = db();
 $error = '';
 $d = array('nombre' => '', 'apellido' => '', 'correo' => '', 'telefono' => '', 'fecha_nacimiento' => '');

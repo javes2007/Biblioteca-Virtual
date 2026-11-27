@@ -9,11 +9,13 @@ $cab_vencidos = 0;
 $cab_solicitudes = 0;
 $cab_edad = 0;
 $cab_sugerencias = 0;
-if (es_admin()) {
+if (es_gestor_prestamos()) {
     $cab_vencidos = contar_vencidos($cab_cn);
     $cab_solicitudes = contar_solicitudes($cab_cn);
-    $cab_edad = (int)valor($cab_cn, "SELECT COUNT(*) FROM cambios_edad WHERE estado = 'Pendiente'");
-    $cab_sugerencias = (int)valor($cab_cn, "SELECT COUNT(*) FROM sugerencias WHERE estado = 'Pendiente'");
+    if (es_admin()) {
+        $cab_edad = (int)valor($cab_cn, "SELECT COUNT(*) FROM cambios_edad WHERE estado = 'Pendiente'");
+        $cab_sugerencias = (int)valor($cab_cn, "SELECT COUNT(*) FROM sugerencias WHERE estado = 'Pendiente'");
+    }
 } elseif (es_lector()) {
     $cab_vencidos = (int)valor($cab_cn, "SELECT COUNT(*) FROM prestamos WHERE usuario_id = ? AND estado = 'Activo' AND fecha_limite < CURDATE()", 'i', array((int)$_SESSION['usuario_id']));
 }
@@ -30,6 +32,12 @@ if (es_admin()) {
         array('informes.php', 'Informes', 'grafico', array('informes.php'), 0),
         array('apariencia.php', 'Apariencia', 'paleta', array('apariencia.php'), 0),
         array('catalogo.php', 'Catálogo', 'buscar', array('catalogo.php', 'libro.php', 'leer.php'), 0)
+    );
+} elseif (es_bibliotecario()) {
+    $cab_menu = array(
+        array('panel_bibliotecario.php', 'Panel', 'inicio', array('panel_bibliotecario.php'), $cab_vencidos + $cab_solicitudes),
+        array('prestamos.php', 'Préstamos', 'prestamo', array('prestamos.php', 'prestamo_form.php'), 0),
+        array('catalogo.php', 'Catálogo', 'buscar', array('catalogo.php', 'libro.php'), 0)
     );
 } else {
     $cab_menu[] = array('index.php', 'Inicio', 'inicio', array('index.php'), 0);
@@ -61,7 +69,7 @@ $cab_estilo .= '}' . limpiar_css($cab_cfg['css_extra']);
 <body data-csrf="<?php echo e(csrf_token()); ?>" data-logueado="<?php echo logueado() ? '1' : '0'; ?>">
 <header class="barra">
   <div class="barra-in">
-    <a class="logo" href="<?php echo es_admin() ? 'panel.php' : 'index.php'; ?>"><?php echo icono('libro', 26); ?><span><?php echo e($cab_cfg['nombre_sitio']); ?></span></a>
+    <a class="logo" href="<?php echo es_admin() ? 'panel.php' : (es_bibliotecario() ? 'panel_bibliotecario.php' : 'index.php'); ?>"><?php echo icono('libro', 26); ?><span><?php echo e($cab_cfg['nombre_sitio']); ?></span></a>
     <button class="menu-boton" type="button" aria-label="Abrir menú" onclick="document.body.classList.toggle('menu-abierto')"><?php echo icono('menu', 24); ?></button>
     <nav class="menu">
       <?php foreach ($cab_menu as $cab_item): ?>

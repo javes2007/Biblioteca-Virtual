@@ -1,6 +1,6 @@
 <?php
 require_once 'seguridad.php';
-exigir_admin();
+exigir_gestor_prestamos();
 $cn = db();
 $q = trim(isset($_GET['q']) ? $_GET['q'] : '');
 $estado = isset($_GET['estado']) ? $_GET['estado'] : '';
@@ -28,7 +28,7 @@ $filas = consulta($cn, 'SELECT p.id, p.estado, p.fecha_prestamo, p.fecha_limite,
 $titulo = 'Préstamos';
 require 'cabecera.php';
 ?>
-<div class="seccion-titulo" style="margin-top:0"><h1>Préstamos</h1><a class="btn" href="prestamo_form.php"><?php echo icono('mas', 16); ?> Nuevo préstamo</a></div>
+<div class="seccion-titulo" style="margin-top:0"><h1>Gestión de préstamos</h1><a class="btn" href="prestamo_form.php"><?php echo icono('mas', 16); ?> Nuevo préstamo</a></div>
 <form class="barra-acciones" method="get">
   <div class="buscar"><input type="search" name="q" value="<?php echo e($q); ?>" placeholder="Buscar por lector, teléfono, libro o código"><button class="btn" type="submit"><?php echo icono('buscar', 16); ?></button></div>
   <select name="estado" style="width:auto" onchange="this.form.submit()"><option value="">Todos los estados</option><?php foreach ($validos as $v): ?><option value="<?php echo e($v); ?>" <?php echo $estado === $v ? 'selected' : ''; ?>><?php echo e($v); ?></option><?php endforeach; ?></select>
@@ -56,7 +56,7 @@ require 'cabecera.php';
           <form method="post" action="prestamo_accion.php"><?php echo campo_csrf(); ?><input type="hidden" name="id" value="<?php echo (int)$f['id']; ?>"><input type="hidden" name="accion" value="renovar"><button class="btn btn-sm btn-oro" type="submit">+7 días</button></form>
           <a class="btn btn-sm btn-claro" href="prestamo_form.php?id=<?php echo (int)$f['id']; ?>">Editar</a>
         <?php endif; ?>
-        <form method="post" action="prestamo_accion.php" onsubmit="return confirm('¿Eliminar este registro de préstamo?');"><?php echo campo_csrf(); ?><input type="hidden" name="id" value="<?php echo (int)$f['id']; ?>"><input type="hidden" name="accion" value="eliminar"><button class="btn btn-sm btn-peligro" type="submit"><?php echo icono('borrar', 15); ?></button></form>
+        <?php if (es_admin()): ?><form method="post" action="prestamo_accion.php" onsubmit="return confirm('¿Eliminar este registro de préstamo?');"><?php echo campo_csrf(); ?><input type="hidden" name="id" value="<?php echo (int)$f['id']; ?>"><input type="hidden" name="accion" value="eliminar"><button class="btn btn-sm btn-peligro" type="submit"><?php echo icono('borrar', 15); ?></button></form><?php endif; ?>
       </td>
     </tr>
   <?php endforeach; ?>

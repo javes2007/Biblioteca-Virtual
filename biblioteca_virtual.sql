@@ -40,7 +40,7 @@ CREATE TABLE usuarios (
   telefono VARCHAR(20) NOT NULL,
   fecha_nacimiento DATE NOT NULL,
   clave VARCHAR(255) NOT NULL,
-  rol ENUM('admin','lector') NOT NULL DEFAULT 'lector',
+  rol ENUM('admin','bibliotecario','lector') NOT NULL DEFAULT 'lector',
   activo TINYINT(1) NOT NULL DEFAULT 1,
   foto VARCHAR(80) DEFAULT NULL,
   tema ENUM('auto','claro','oscuro') NOT NULL DEFAULT 'auto',
@@ -449,7 +449,11 @@ INSERT INTO prestamos (libro_id, usuario_id, estado, fecha_prestamo, fecha_limit
 ((SELECT id FROM libros WHERE codigo='BV-0003'),(SELECT id FROM usuarios WHERE correo='laura@biblioteca.com'),'Activo',DATE_SUB(CURDATE(),INTERVAL 3 DAY),DATE_ADD(CURDATE(),INTERVAL 4 DAY),NULL,(SELECT id FROM usuarios WHERE correo='admin@biblioteca.com')),
 ((SELECT id FROM libros WHERE codigo='BV-0006'),(SELECT id FROM usuarios WHERE correo='carlos@biblioteca.com'),'Activo',DATE_SUB(CURDATE(),INTERVAL 15 DAY),DATE_SUB(CURDATE(),INTERVAL 8 DAY),NULL,(SELECT id FROM usuarios WHERE correo='admin@biblioteca.com')),
 ((SELECT id FROM libros WHERE codigo='BV-0004'),(SELECT id FROM usuarios WHERE correo='laura@biblioteca.com'),'Devuelto',DATE_SUB(CURDATE(),INTERVAL 30 DAY),DATE_SUB(CURDATE(),INTERVAL 23 DAY),DATE_SUB(CURDATE(),INTERVAL 25 DAY),(SELECT id FROM usuarios WHERE correo='admin@biblioteca.com')),
-((SELECT id FROM libros WHERE codigo='BV-0001'),(SELECT id FROM usuarios WHERE correo='carlos@biblioteca.com'),'Solicitado',NULL,NULL,NULL,NULL);
+((SELECT id FROM libros WHERE codigo='BV-0001'),(SELECT id FROM usuarios WHERE correo='carlos@biblioteca.com'),'Solicitado',NULL,NULL,NULL,NULL),
+((SELECT id FROM libros WHERE codigo='BV-0002'),(SELECT id FROM usuarios WHERE correo='carlos@biblioteca.com'),'Devuelto',DATE_SUB(CURDATE(),INTERVAL 45 DAY),DATE_SUB(CURDATE(),INTERVAL 38 DAY),DATE_SUB(CURDATE(),INTERVAL 39 DAY),(SELECT id FROM usuarios WHERE correo='admin@biblioteca.com')),
+((SELECT id FROM libros WHERE codigo='BV-0005'),(SELECT id FROM usuarios WHERE correo='laura@biblioteca.com'),'Rechazado',NULL,NULL,NULL,(SELECT id FROM usuarios WHERE correo='admin@biblioteca.com')),
+((SELECT id FROM libros WHERE codigo='BV-0007'),(SELECT id FROM usuarios WHERE correo='laura@biblioteca.com'),'Activo',DATE_SUB(CURDATE(),INTERVAL 1 DAY),DATE_ADD(CURDATE(),INTERVAL 6 DAY),NULL,(SELECT id FROM usuarios WHERE correo='admin@biblioteca.com')),
+((SELECT id FROM libros WHERE codigo='BV-0008'),(SELECT id FROM usuarios WHERE correo='laura@biblioteca.com'),'Solicitado',NULL,NULL,NULL,NULL);
 
 INSERT INTO lecturas (usuario_id, libro_id, capitulo_orden, progreso, terminado) VALUES
 ((SELECT id FROM usuarios WHERE correo='laura@biblioteca.com'),(SELECT id FROM libros WHERE codigo='BV-0001'),3,60,0),

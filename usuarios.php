@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 $q = trim(isset($_GET['q']) ? $_GET['q'] : '');
 $rol = isset($_GET['rol']) ? $_GET['rol'] : '';
-if ($rol !== 'admin' && $rol !== 'lector') { $rol = ''; }
+if (!in_array($rol, array('admin', 'bibliotecario', 'lector'), true)) { $rol = ''; }
 $donde = ' WHERE 1=1';
 $tipos = '';
 $params = array();
@@ -40,11 +40,11 @@ $titulo = 'Usuarios';
 require 'cabecera.php';
 ?>
 <div class="seccion-titulo" style="margin-top:0"><h1>Usuarios</h1>
-  <div class="acciones"><a class="btn btn-oro" href="solicitudes_edad.php"><?php echo icono('reloj', 16); ?> Solicitudes de cambio de fecha<?php if ($pendientes > 0): ?> <span class="globo"><?php echo $pendientes; ?></span><?php endif; ?></a><a class="btn" href="usuario_form.php"><?php echo icono('mas', 16); ?> Nuevo administrador</a></div></div>
+  <div class="acciones"><a class="btn btn-oro" href="solicitudes_edad.php"><?php echo icono('reloj', 16); ?> Solicitudes de cambio de fecha<?php if ($pendientes > 0): ?> <span class="globo"><?php echo $pendientes; ?></span><?php endif; ?></a><a class="btn" href="usuario_form.php"><?php echo icono('mas', 16); ?> Nuevo usuario interno</a></div></div>
 <p class="ayuda">Los lectores se crean solos al registrarse en la página. Desde aquí puedes activar o desactivar cuentas, cambiar el perfil y eliminar usuarios. Por privacidad no se muestra el perfil personal de los lectores.</p>
 <form class="barra-acciones" method="get">
   <div class="buscar"><input type="search" name="q" value="<?php echo e($q); ?>" placeholder="Buscar por nombre, correo o teléfono"><button class="btn" type="submit"><?php echo icono('buscar', 16); ?></button></div>
-  <select name="rol" style="width:auto" onchange="this.form.submit()"><option value="">Todos los perfiles</option><option value="admin" <?php echo $rol === 'admin' ? 'selected' : ''; ?>>Administradores</option><option value="lector" <?php echo $rol === 'lector' ? 'selected' : ''; ?>>Lectores</option></select>
+  <select name="rol" style="width:auto" onchange="this.form.submit()"><option value="">Todos los perfiles</option><option value="admin" <?php echo $rol === 'admin' ? 'selected' : ''; ?>>Administradores</option><option value="bibliotecario" <?php echo $rol === 'bibliotecario' ? 'selected' : ''; ?>>Bibliotecarios</option><option value="lector" <?php echo $rol === 'lector' ? 'selected' : ''; ?>>Lectores</option></select>
   <?php if ($q !== '' || $rol !== ''): ?><a href="usuarios.php">Limpiar</a><?php endif; ?>
 </form>
 <?php if (!count($filas)): ?><div class="vacio">No hay usuarios para mostrar.</div><?php else: ?>
@@ -56,7 +56,7 @@ require 'cabecera.php';
       <td><strong><?php echo e($f['nombre'] . ' ' . $f['apellido']); ?></strong></td>
       <td><?php echo e($f['correo']); ?></td>
       <td><a class="tel" href="<?php echo e(telefono_enlace($f['telefono'])); ?>"><?php echo icono('telefono', 15); ?> <?php echo e($f['telefono']); ?></a></td>
-      <td><?php echo $f['rol'] === 'admin' ? 'Administrador' : 'Lector'; ?></td>
+      <td><?php echo $f['rol'] === 'admin' ? 'Administrador' : ($f['rol'] === 'bibliotecario' ? 'Bibliotecario' : 'Lector'); ?></td>
       <td><span class="<?php echo (int)$f['activo'] ? 'est est-devuelto' : 'est est-rechazado'; ?>"><?php echo (int)$f['activo'] ? 'Activa' : 'Inactiva'; ?></span></td>
       <td><?php echo (int)$f['prestados']; ?><?php if ((int)$f['vencidos'] > 0): ?> <span class="est est-vencido"><?php echo (int)$f['vencidos']; ?> vencido(s)</span><?php endif; ?></td>
       <td><?php echo fecha_es($f['creado_en']); ?></td>
