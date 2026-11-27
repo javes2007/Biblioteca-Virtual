@@ -1,6 +1,6 @@
 <?php
 require_once 'seguridad.php';
-exigir_admin();
+exigir_gestor_prestamos();
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') { redirigir('prestamos.php'); }
 validar_csrf();
 $cn = db();
@@ -8,7 +8,8 @@ $yo = (int)$_SESSION['usuario_id'];
 $accion = isset($_POST['accion']) ? $_POST['accion'] : '';
 $id = (int)(isset($_POST['id']) ? $_POST['id'] : 0);
 $volver = isset($_POST['volver']) ? $_POST['volver'] : 'prestamos.php';
-if (!in_array($volver, array('prestamos.php', 'panel.php'), true)) { $volver = 'prestamos.php'; }
+if (!in_array($volver, array('prestamos.php', 'panel.php', 'panel_bibliotecario.php'), true)) { $volver = 'prestamos.php'; }
+if (es_bibliotecario() && $volver === 'panel.php') { $volver = 'panel_bibliotecario.php'; }
 $p = fila($cn, 'SELECT id, libro_id, usuario_id, estado FROM prestamos WHERE id = ?', 'i', array($id));
 if (!$p) {
     flash('error', 'El préstamo no existe.');
@@ -40,8 +41,12 @@ if ($accion === 'aprobar') {
     $n = ejecutar($cn, "UPDATE prestamos SET fecha_limite = DATE_ADD(GREATEST(fecha_limite, CURDATE()), INTERVAL 7 DAY) WHERE id = ? AND estado = 'Activo'", 'i', array($id));
     flash($n > 0 ? 'ok' : 'error', $n > 0 ? 'Préstamo renovado por 7 días más.' : 'Ese préstamo no está activo.');
 } elseif ($accion === 'eliminar') {
-    $n = ejecutar($cn, 'DELETE FROM prestamos WHERE id = ?', 'i', array($id));
-    flash($n > 0 ? 'ok' : 'error', $n > 0 ? 'Préstamo eliminado.' : 'No se pudo eliminar el préstamo.');
+    if (!es_admin()) {
+        flash('error', 'Solo un administrador puede eliminar registros de préstamos.');
+    } else {
+        $n = ejecutar($cn, 'DELETE FROM prestamos WHERE id = ?', 'i', array($id));
+        flash($n > 0 ? 'ok' : 'error', $n > 0 ? 'Préstamo eliminado.' : 'No se pudo eliminar el préstamo.');
+    }
 } else {
     flash('error', 'Acción no válida.');
 }
